@@ -1,0 +1,10 @@
+9
+0 Alex
+3 Bart
+5 Monia
+4 Ola
+1 Szymon
+7 Tomek
+1 patryk
+2 1
+0 szymon
