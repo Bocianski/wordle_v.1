@@ -1,17 +1,19 @@
-public class Players {
+package Model;
+public class Player {
     private final String name;
     private int score;
 
-    public Players(String name, int score) {
+    // Constructor
+    public Player(String name) {
+        this.name = name;
+        this.score = 0;
+    }
+    public Player(String name, int score) {
         this.name = name;
         this.score = score;
     }
 
-    public Players(String name) {
-        this.name = name;
-        this.score = 0;
-    }
-
+    // Getters and Setters
     public String getName() {
         return name;
     }
