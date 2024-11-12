@@ -1,11 +1,13 @@
 package Model;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import Model.Player;
 import java.util.Scanner;
 
 public class Game {
@@ -109,27 +111,50 @@ public class Game {
 
     // Save players to a file
     public void savePlayersToFile() {
-        try (FileWriter fileOut = new FileWriter("src/Resources/players.txt")) {
-            fileOut.write(STR."\{players.size()}\n");
-            for (Player player : players) {
-                fileOut.write(STR."\{player.getScore()} \{player.getName()}\n");
-            }
+        String filePath = "src/Resources/players.json";
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        try (FileWriter writer = new FileWriter(filePath)) {
+            PlayersData data = new PlayersData(players);
+            gson.toJson(data, writer);  // Serialize players list to JSON
         } catch (IOException e) {
-            System.err.println(STR."Error saving players: \{e.getMessage()}");
+            System.out.println("Error saving players to the JSON file.");
         }
     }
 
     // Load players from a file
     public void loadPlayersFromFile() {
-        try (Scanner scanner = new Scanner(new File("src/Resources/players.txt"))) {
-            int size = scanner.nextInt();
-            for (int i = 0; i < size; i++) {
-                int score = scanner.nextInt();
-                String name = scanner.next();
-                players.add(new Player(name, score));
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("Player file not found. Starting with an empty player list.");
+        String filePath = "src/Resources/players.json";
+        Gson gson = new Gson();
+
+        try (FileReader reader = new FileReader(filePath)) {
+            // Deserialize JSON to a list of players
+            PlayersData data = gson.fromJson(reader, PlayersData.class);
+            players.addAll(data.getPlayers());
+        } catch (IOException | JsonSyntaxException e) {
+            System.out.println("Error reading the JSON file. Starting with an empty player list.");
         }
     }
+
+    public class PlayersData {
+        private List<Player> players;
+
+        // Constructor to initialize the players list
+        public PlayersData(List<Player> players) {
+            this.players = players;
+        }
+
+        // Default constructor (needed by Gson for deserialization)
+        public PlayersData() {
+        }
+
+        public List<Player> getPlayers() {
+            return players;
+        }
+
+        public void setPlayers(List<Player> players) {
+            this.players = players;
+        }
+    }
+
 }

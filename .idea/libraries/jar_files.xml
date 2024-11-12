@@ -2,6 +2,7 @@
   <library name="jar_files">
     <CLASSES>
       <root url="file://$PROJECT_DIR$/jar_files" />
+      <root url="jar://$PROJECT_DIR$/../../../../../Program Files (x86)/Common Files/Oracle/gson-2.11.0.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

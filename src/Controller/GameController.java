@@ -4,6 +4,8 @@ import Model.Game;
 import Model.Player;
 import View.GameView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -50,49 +52,74 @@ public class GameController {
             case 7 -> exitGame();
         }
     }
+
     private void leaderboard() {
         Scanner scanner = new Scanner(System.in);
         GameView.leaderboard(game);
         scanner.nextLine();
     }
+
     private void showInstructions() {
         Scanner scanner = new Scanner(System.in);
         GameView.showInstructions();
         scanner.nextLine();
     }
+
     // Play Wordle game (stub method)
     private int playWordle() {
         Scanner scanner = new Scanner(System.in);
-        String guess, guessed[];
-        int i, j, result [];
+        String guess;
+        int[] result;
+
+        // List to store previous guesses to update the board with used attempts
+        List<String> guessedWords = new ArrayList<>();
+        List<int[]> guessResults = new ArrayList<>();
+
         while (game.hasAttemptsLeft()) {
-            // print used trees, starts with 0, gets more in 'successfull tries
-            for (j = game.getAttempts(); j < 5; j--) {
-                view.updateBoard(guessed, result, difficultyLevel - game.getAttempts());
+            // Display all previous attempts with results
+            for (int k = 0; k < guessedWords.size(); k++) {
+                view.updateBoard(guessedWords.get(k), guessResults.get(k));
             }
-            //print unused trees, starts with 5, gets smaller with each try
-            for (i = game.getAttempts(); i > 0; i--) {
+
+            // Print blank rows for remaining attempts
+            int unusedAttempts = game.getAttempts(); // Changed to getAttemptsLeft
+            for (int i = 0; i < unusedAttempts; i++) {
                 view.printBlankBoard();
             }
-            GameView.getUserGuess();
+
+            // Get the user's guess
+            view.getUserGuessPrompt();  // Method to prompt user for input
             guess = scanner.nextLine().toLowerCase();
 
-            if (!game.isWordInDictionary(guess)) {
+            // Validate guess length and presence in dictionary
+            if (guess.length() != 5 || !game.isWordInDictionary(guess)) {
                 view.showInvalidWordMessage();
-                continue;
+                continue;  // Skip this iteration if input is invalid
             }
 
+            // Check the guess and get the color-coded result
             result = game.checkGuess(guess);
+
+            // Store this guess and its result for future board updates
+            guessedWords.add(guess);
+            guessResults.add(result);
+
+            // Update board with the current guess and color-coding
             view.updateBoard(guess, result);
 
+            // Check if the game is won
             if (game.isGameWon(result)) {
                 view.showWinMessage();
-                return 1;
+                return 1;  // Return 1 to indicate a win
             }
         }
+
+        // If the while loop exits (no attempts left), the player loses
         view.showLoseMessage(game.getAnswer());
-        return 0;
+        return 0;  // Return 0 to indicate a loss
     }
+
+
     private void updateScores(int score) {
         if (score > 1) {
             winstreak++;
@@ -111,9 +138,9 @@ public class GameController {
         int level = scanner.nextInt();
         if (level == 1) {
             difficultyLevel = 7;
-        }   else if (level ==2) {
+        } else if (level == 2) {
             difficultyLevel = 5;
-        }   else if (level == 3) {
+        } else if (level == 3) {
             difficultyLevel = 4;
         }
     }

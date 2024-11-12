@@ -1,0 +1,28 @@
+{
+  "players": [
+    {
+      "name": "Alice",
+      "score": 5
+    },
+    {
+      "name": "Bob",
+      "score": 2
+    },
+    {
+      "name": "Alice",
+      "score": 5
+    },
+    {
+      "name": "Bob",
+      "score": 2
+    },
+    {
+      "name": "default",
+      "score": 0
+    },
+    {
+      "name": "szymon",
+      "score": 0
+    }
+  ]
+}

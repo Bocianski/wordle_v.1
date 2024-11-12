@@ -2,9 +2,10 @@ import Controller.GameController;
 import Model.Game;
 import View.GameView;
 
-import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 public class Main {
     public static void main(String[] args) {
@@ -21,22 +22,30 @@ public class Main {
 
     // Method to read words from file (stub)
     public static String[] readWordsFromFile() {
-        String filePath = "src/Resources/words.txt";
+        String filePath = "src/Resources/words.json";
+        Gson gson = new Gson();
         String[] words = new String[0];
 
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            // Read the first line to get the number of words
-            int numOfWords = Integer.parseInt(br.readLine().trim());
-            words = new String[numOfWords];
-
-            // Read the remaining lines to fill the words array
-            for (int i = 0; i < numOfWords; i++) {
-                words[i] = br.readLine().trim();  // Add each word to the array
-            }
-        } catch (IOException e) {
-            System.err.println(STR."Error reading the file: \{e.getMessage()}");
+        try (FileReader reader = new FileReader(filePath)) {
+            // Deserialize JSON to an array of words
+            WordsData data = gson.fromJson(reader, WordsData.class);
+            words = data.getWords();
+        } catch (IOException | JsonSyntaxException e) {
+            System.err.println("Error reading the JSON file: " + e.getMessage());
         }
 
         return words;
+    }
+    // Inner class to match the JSON structure
+    private static class WordsData {
+        private String[] words;
+
+        public String[] getWords() {
+            return words;
+        }
+
+        public void setWords(String[] words) {
+            this.words = words;
+        }
     }
 }
