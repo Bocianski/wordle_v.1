@@ -63,22 +63,26 @@ public class GameController {
     // Play Wordle game (stub method)
     private int playWordle() {
         Scanner scanner = new Scanner(System.in);
+        String guess, guessed[];
+        int i, j, result [];
         while (game.hasAttemptsLeft()) {
-            int i;
             // print used trees, starts with 0, gets more in 'successfull tries
+            for (j = game.getAttempts(); j < 5; j--) {
+                view.updateBoard(guessed, result, difficultyLevel - game.getAttempts());
+            }
             //print unused trees, starts with 5, gets smaller with each try
             for (i = game.getAttempts(); i > 0; i--) {
                 view.printBlankBoard();
             }
             GameView.getUserGuess();
-            String guess = scanner.nextLine().toLowerCase();
+            guess = scanner.nextLine().toLowerCase();
 
             if (!game.isWordInDictionary(guess)) {
                 view.showInvalidWordMessage();
                 continue;
             }
 
-            int[] result = game.checkGuess(guess);
+            result = game.checkGuess(guess);
             view.updateBoard(guess, result);
 
             if (game.isGameWon(result)) {

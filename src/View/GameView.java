@@ -70,26 +70,15 @@ public class GameView {
     public static final String ANSI_YELLOW = "\u001B[33m";
     public static final String ANSI_BLUE = "\u001B[34m";
     public static final String ANSI_BLACK = "\u001B[30m";
-    public static final String ANSI_WHITE = "\u001B[47m";
+    public static final String ANSI_WHITE = "\u001B[37m";
     public static final String ANSI_YELLOW_BACKGROUND = "\u001B[43m";
     private String getColor(int status) {
         return switch (status) {
             case 1 -> ANSI_YELLOW;
             case 2 -> ANSI_GREEN;
-            default -> ANSI_RED;
+            case 3 -> ANSI_RED;
+            default -> ANSI_WHITE;
         };
-    }
-    public void printWordBoard(String rightWord) {
-        printTopOrBottomBorder();
-        for (int i = 0; i < 3; i++) {
-            if (i == 1) {
-                printMiddleRowWithWord(rightWord);  // Middle row with word
-            } else {
-                printEmptyMiddleRow();              // Empty rows
-            }
-        }
-        printTopOrBottomBorder();
-        System.out.println();
     }
 
     // Method to print a blank board
@@ -99,21 +88,9 @@ public class GameView {
             printTopOrBottomBorder();
     }
 
-    // Method to print the board during the game with character guesses and colors
-    public void printGameBoard(char[][] arr, int[][] tab, int rowsToPrint) {
-        for (int i = 0; i < rowsToPrint; i++) {
-            printRow(tab[i], "top");      // Print top part of each cell
-            printRow(tab[i], "middle");   // Print middle part (empty space)
-            printValues(arr[i], tab[i]);  // Print values in the middle
-            printRow(tab[i], "middle");   // Print middle part (empty space)
-            printRow(tab[i], "bottom");   // Print bottom part of each cell
-            System.out.println();
-        }
-    }
-
     // Helper method to print top and bottom borders of the cells
-    private void printTopOrBottomBorder(String statte) {
-        if//lepiej chyba stan zrobic na mapach
+    private void printTopOrBottomBorder() {
+        //lepiej chyba stan zrobic na mapach
         for (int i = 0; i < 5; i++) {
             System.out.print(STR."\{ANSI_WHITE}\t*---* \{ANSI_RESET}");
         }
@@ -123,7 +100,7 @@ public class GameView {
     // Helper method to print empty middle row of cells
     private void printEmptyMiddleRow() {
         for (int i = 0; i < 5; i++) {
-            System.out.print(STR."\{ANSI_GREEN}\t|   | \{ANSI_RESET}");
+            System.out.print(STR."\{ANSI_WHITE}\t|   | \{ANSI_RESET}");
         }
         System.out.println();
     }
@@ -137,41 +114,9 @@ public class GameView {
     }
 
     // Helper method to print cell rows with dynamic content
-    private void printRow(int[] row, String part) {
-        for (int i : row) {
-            String color = getColor(i);
-            switch (part) {
-                case "top":
-                case "bottom":
-                    System.out.print(STR."\{color}\t----- \{ANSI_RESET}");
-                    break;
-                case "middle":
-                    System.out.print(STR."\{color}\t-   - \{ANSI_RESET}");
-                    break;
-            }
-        }
-        System.out.println();
-    }
+
 
     // Helper method to print the actual values in the cells
-    private void printValues(char[] values, int[] row) {
-        for (int i = 0; i < row.length; i++) {
-            String color = getColor(row[i]);
-            char value = values[i];
-            switch (row[i]) {
-                case 0:
-                    System.out.print(STR."\{color}\t- \{value} - \{ANSI_RESET}");
-                    break;
-                case 1:
-                    System.out.print(STR."\{color}\t$ \{value} $ \{ANSI_RESET}");
-                    break;
-                case 2:
-                    System.out.print(STR."\{color}\t+ \{value} + \{ANSI_RESET}");
-                    break;
-            }
-        }
-        System.out.println();
-    }
 
     public static void logo() {
         cls();
@@ -212,8 +157,9 @@ public class GameView {
         System.out.println(STR."\{ANSI_RED}Przykro nam ale skończyły ci się próby. Odpowiedź to: \{answer}\{ANSI_RESET}");
     }
     // -------------------------------------------------------------------------
-    public void updateBoard(String guess, int[] result) {
+    public void updateBoard(String[] guessed, int[] result, int done) {
         System.out.println("Board:");
+        for (int j = done; )
         for (int i = 0; i < 5; i++) {
             if (result[i] == 2) {
                 System.out.print(STR."\{ANSI_GREEN}\{guess.charAt(i)} \{ANSI_RESET}");  // Correct

@@ -1,4 +1,4 @@
-9
+13
 0 Alex
 3 Bart
 5 Monia
@@ -8,3 +8,7 @@
 1 patryk
 2 1
 0 szymon
+0 marek
+0 default
+0 asd
+0 Maja
